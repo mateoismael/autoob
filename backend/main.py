@@ -3,15 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime, timezone
 from dotenv import load_dotenv
 import os
-import sys
-import asyncio
-
-# Fix para Windows + Python 3.13 + Playwright
-if sys.platform == 'win32':
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 from models import ContratacionResponse
-from scraper import get_contrataciones  # Habilitado para probar con buscador público
+from scraper import get_contrataciones
 
 # Cargar variables de entorno
 load_dotenv(dotenv_path="../.env")
