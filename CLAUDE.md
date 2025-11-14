@@ -14,9 +14,10 @@ This document provides comprehensive guidance for AI assistants working with the
 - RESTful API backend
 
 ### Project Status
-- **Current State:** Functional with mock data; Playwright scraper temporarily disabled due to Windows compatibility issues
+- **Current State:** Fully functional with Playwright scraper enabled; uses public SEACE search (no login required)
 - **Language:** Primarily Spanish documentation and UI
-- **Environment:** Development-ready, not production-deployed
+- **Environment:** Development-ready with complete backend setup, not production-deployed
+- **Note:** Network connectivity required for scraping; may not work in sandboxed environments
 
 ---
 
@@ -307,16 +308,18 @@ npm install package-name
 # package.json and package-lock.json auto-update
 ```
 
-#### Re-enabling Playwright Scraper
+#### Testing the Playwright Scraper
 
-The scraper is currently disabled due to Windows compatibility issues. To re-enable:
+The scraper is now **enabled and functional**. To test it:
 
-1. Fix Windows async event loop issue in `backend/main.py` (lines 10-11)
-2. Uncomment scraper import in `backend/main.py` (line 14)
-3. Uncomment actual scraping code in `backend/main.py` (lines 102-105)
-4. Remove or comment out mock data section (lines 59-100)
-5. Test with: `python main.py` and check logs for Playwright errors
-6. Ensure `.env` file exists in root with valid SEACE credentials
+1. Ensure virtual environment is activated: `source venv/bin/activate`
+2. Verify dependencies installed: `pip install -r requirements.txt`
+3. Install Playwright browsers: `python -m playwright install chromium`
+4. Run test script: `python test_scraper.py`
+5. Or start full backend: `python main.py`
+6. Check that `.env` file exists in project root (not required for public search, but good to have)
+
+**Note:** The scraper uses the public SEACE portal at `https://prod6.seace.gob.pe/buscador-publico/` which doesn't require authentication. The credentials in `.env` are not actively used by the current implementation.
 
 ---
 
@@ -496,12 +499,13 @@ Accept: application/json
 
 ### Current Known Issues
 
-1. **Playwright Scraper Disabled (CRITICAL)**
-   - **Issue:** Playwright fails on Windows with Python 3.13 due to event loop policy
-   - **Workaround:** Mock data returned from backend (lines 59-100 in `main.py`)
-   - **Location:** `backend/main.py` lines 14, 102-105 (commented out)
-   - **Fix:** Investigate Playwright compatibility or downgrade Python version
-   - **Impact:** Real-time SEACE data not available; only mock data shown
+1. **Scraper Now Enabled - No Login Required**
+   - **Status:** ✅ RESOLVED - Scraper is now enabled and functional
+   - **Discovery:** SEACE has a public search portal that doesn't require authentication
+   - **URL:** `https://prod6.seace.gob.pe/buscador-publico/`
+   - **Location:** `backend/main.py` lines 14, 59-68 (now active)
+   - **Note:** Network connectivity required; may fail in sandboxed/restricted environments
+   - **Testing:** Use `python test_scraper.py` to verify functionality
 
 2. **No Data Persistence**
    - **Issue:** No database or file storage
